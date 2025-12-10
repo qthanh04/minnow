@@ -1,5 +1,101 @@
+# Build directories
 /build
-/.ccls-cache
-/.vscode
+/build-*
+cmake-build-*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Compiled Object files
+*.o
+*.obj
+*.lo
+*.slo
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.bin
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# IDE and Editor files
+/.vscode/
+/.idea/
 *.swp
-/.cache
+*.swo
+*~
+.DS_Store
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+
+# Code completion and indexing
+/.ccls-cache/
+/.cache/
+/.clangd/
+tags
+TAGS
+*.taghl
+
+# Testing
+*.gcov
+*.gcda
+*.gcno
+coverage/
+*.profdata
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.cache
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Package files
+*.tar.gz
+*.zip
+*.rar
