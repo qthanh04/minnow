@@ -17,7 +17,7 @@ string_view Parser::BufferList::peek() const
 void Parser::BufferList::remove_prefix( uint64_t len )
 {
   while ( len and not buffer_.empty() ) {
-    const uint64_t to_pop_now = min( len, peek().size() );
+    const uint64_t to_pop_now = std::min( len, static_cast<uint64_t>( peek().size() ) );
     skip_ += to_pop_now;
     len -= to_pop_now;
     size_ -= to_pop_now;
@@ -123,10 +123,10 @@ void Parser::concatenate_all_remaining( std::string& out )
     out.clear();
     return;
   }
-  out = concat.front().release();
+  out = concat.front().get();
   if ( concat.size() > 1 ) {
     for ( auto it = concat.begin() + 1; it != concat.end(); ++it ) {
-      out.append( *it );
+      out.append( it->get() );
     }
   }
 }

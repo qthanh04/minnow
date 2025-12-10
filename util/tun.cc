@@ -3,11 +3,15 @@
 
 #include <cstring>
 #include <fcntl.h>
+#ifdef __linux__
 #include <linux/if.h>
 #include <linux/if_tun.h>
+#endif
 #include <sys/ioctl.h>
 
+#ifdef __linux__
 static constexpr const char* CLONEDEV = "/dev/net/tun";
+#endif
 
 using namespace std;
 
@@ -21,6 +25,7 @@ using namespace std;
 //!
 //! as root before calling this function.
 
+#ifdef __linux__
 TunTapFD::TunTapFD( const string& devname, const bool is_tun )
   : FileDescriptor( ::CheckSystemCall( "open", open( CLONEDEV, O_RDWR | O_CLOEXEC ) ) )
 {
@@ -35,3 +40,10 @@ TunTapFD::TunTapFD( const string& devname, const bool is_tun )
 
   CheckSystemCall( "ioctl", ioctl( fd_num(), TUNSETIFF, static_cast<void*>( &tun_req ) ) );
 }
+#else
+TunTapFD::TunTapFD( const string& /*devname*/, const bool /*is_tun*/ )
+  : FileDescriptor( -1 )
+{
+  throw std::runtime_error( "TUN/TAP devices are only supported on Linux" );
+}
+#endif

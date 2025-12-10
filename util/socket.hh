@@ -116,6 +116,7 @@ public:
 };
 
 //! A wrapper around [packet sockets](\ref man7:packet)
+#ifdef __linux__
 class PacketSocket : public DatagramSocket
 {
 public:
@@ -123,6 +124,7 @@ public:
 
   void set_promiscuous();
 };
+#endif
 
 //! A wrapper around [raw sockets](\ref man7:raw)
 class RawSocket : public DatagramSocket

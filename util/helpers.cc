@@ -3,6 +3,7 @@
 #include "ipv4_datagram.hh"
 
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 

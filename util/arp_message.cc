@@ -3,6 +3,13 @@
 #include <arpa/inet.h>
 #include <sstream>
 
+// Compatibility for macOS (htobe32 is Linux-specific)
+#ifndef __linux__
+#ifndef htobe32
+#define htobe32(x) htonl(x)
+#endif
+#endif
+
 using namespace std;
 
 bool ARPMessage::supported() const

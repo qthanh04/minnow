@@ -2,7 +2,9 @@
 
 #include "exception.hh"
 
+#ifdef __linux__
 #include <linux/if_packet.h>
+#endif
 #include <stdexcept>
 #include <unistd.h>
 
@@ -26,22 +28,27 @@ Socket::Socket( FileDescriptor&& fd, int domain, int type, int protocol ) // NOL
   int actual_value {};
   socklen_t len {};
 
+#ifdef __linux__
   // verify domain
   len = getsockopt( SOL_SOCKET, SO_DOMAIN, actual_value );
   if ( ( len != sizeof( actual_value ) ) or ( actual_value != domain ) ) {
     throw runtime_error( "socket domain mismatch" );
   }
 
-  // verify type
-  len = getsockopt( SOL_SOCKET, SO_TYPE, actual_value );
-  if ( ( len != sizeof( actual_value ) ) or ( actual_value != type ) ) {
-    throw runtime_error( "socket type mismatch" );
-  }
-
   // verify protocol
   len = getsockopt( SOL_SOCKET, SO_PROTOCOL, actual_value );
   if ( ( len != sizeof( actual_value ) ) or ( actual_value != protocol ) ) {
     throw runtime_error( "socket protocol mismatch" );
+  }
+#else
+  (void)domain;    // unused on non-Linux
+  (void)protocol;  // unused on non-Linux
+#endif
+
+  // verify type
+  len = getsockopt( SOL_SOCKET, SO_TYPE, actual_value );
+  if ( ( len != sizeof( actual_value ) ) or ( actual_value != type ) ) {
+    throw runtime_error( "socket type mismatch" );
   }
 }
 
@@ -153,7 +160,7 @@ void DatagramSocket::recv( Address& source_address, vector<string>& payloads )
   msghdr message { .msg_name = &raw_source_address,
                    .msg_namelen = sizeof( raw_source_address ),
                    .msg_iov = iovecs.data(),
-                   .msg_iovlen = iovecs.size(),
+                   .msg_iovlen = static_cast<int>( iovecs.size() ),
                    .msg_control = nullptr,
                    .msg_controllen {},
                    .msg_flags {} };
@@ -203,7 +210,7 @@ void DatagramSocket::send( vector<iovec>& iovecs, size_t total_size, const optio
                                        : nullptr,
                          .msg_namelen = destination.has_value() ? destination->size() : 0,
                          .msg_iov = iovecs.data(),
-                         .msg_iovlen = iovecs.size(),
+                         .msg_iovlen = static_cast<int>( iovecs.size() ),
                          .msg_control = nullptr,
                          .msg_controllen {},
                          .msg_flags {} };

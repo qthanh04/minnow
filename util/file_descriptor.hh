@@ -2,10 +2,14 @@
 
 #include "string_view_range.hh"
 
-#include <bits/types/struct_iovec.h>
 #include <cstddef>
 #include <memory>
 #include <vector>
+#ifdef __linux__
+#include <bits/types/struct_iovec.h>
+#else
+#include <sys/uio.h>
+#endif
 
 // A reference-counted handle to a file descriptor
 class FileDescriptor

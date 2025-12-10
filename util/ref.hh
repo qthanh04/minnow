@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <stdexcept>
+#include <string_view>
 
 /*
  * A Ref<T> represents a "borrowed"-or-"owned" reference to an object of type T.
@@ -42,7 +43,8 @@ public:
   Ref borrow() const
   {
     Ref ret { uninitialized };
-    ret.borrowed_obj_ = obj_.has_value() ? &obj_.value() : borrowed_obj_;
+    const T* source_ptr = obj_.has_value() ? &obj_.value() : this->borrowed_obj_;
+    ret.borrowed_obj_ = source_ptr;
     return ret;
   }
 
@@ -55,7 +57,7 @@ public:
   {
     if ( this != &other ) {
       obj_ = other.get();
-      borrowed_obj_ = nullptr;
+      this->borrowed_obj_ = nullptr;
     }
     return *this;
   }
@@ -73,7 +75,7 @@ public:
   // accessors
 
   // const reference to object (owned or borrowed)
-  const T& get() const { return obj_.has_value() ? *obj_ : *borrowed_obj_; }
+  const T& get() const { return obj_.has_value() ? *obj_ : *this->borrowed_obj_; }
 
   // mutable reference to object (owned only)
   T& get_mut()

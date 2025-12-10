@@ -4,6 +4,13 @@
 #include <arpa/inet.h>
 #include <sstream>
 
+// Compatibility for macOS (htobe32 is Linux-specific)
+#ifndef __linux__
+#ifndef htobe32
+#define htobe32(x) htonl(x)
+#endif
+#endif
+
 using namespace std;
 
 // Parse from string.
@@ -110,7 +117,9 @@ void IPv4Header::compute_checksum()
 
   // calculate checksum -- taken over header only
   InternetChecksum check;
-  check.add( s.finish() );
+  for ( const auto& buf : s.finish() ) {
+    check.add( std::string_view { buf.get() } );
+  }
   cksum = check.value();
 }
 

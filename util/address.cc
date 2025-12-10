@@ -4,12 +4,24 @@
 
 #include <array>
 #include <cstring>
+#ifdef __linux__
 #include <linux/if_packet.h>
+#endif
 #include <memory>
 #include <netdb.h>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <system_error>
+
+// Compatibility for macOS (htobe32/be32toh are Linux-specific)
+#ifndef __linux__
+#ifndef htobe32
+#define htobe32(x) htonl(x)
+#endif
+#ifndef be32toh
+#define be32toh(x) ntohl(x)
+#endif
+#endif
 
 using namespace std;
 
@@ -178,8 +190,10 @@ constexpr int sockaddr_family<sockaddr_in> = AF_INET;
 template<>
 constexpr int sockaddr_family<sockaddr_in6> = AF_INET6;
 
+#ifdef __linux__
 template<>
 constexpr int sockaddr_family<sockaddr_ll> = AF_PACKET;
+#endif
 
 // safely cast the address to its underlying sockaddr type
 template<typename sockaddr_type>
@@ -195,4 +209,6 @@ const sockaddr_type* Address::as() const
 
 template const sockaddr_in* Address::as<sockaddr_in>() const;
 template const sockaddr_in6* Address::as<sockaddr_in6>() const;
+#ifdef __linux__
 template const sockaddr_ll* Address::as<sockaddr_ll>() const;
+#endif
