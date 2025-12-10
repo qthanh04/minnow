@@ -146,7 +146,7 @@ struct BytesBuffered : public ExpectNumber<ByteStream, uint64_t>
 {
   using ExpectNumber::ExpectNumber;
   std::string name() const override { return "bytes_buffered"; }
-  size_t value( const ByteStream& bs ) const override { return bs.reader().bytes_buffered(); }
+  uint64_t value( const ByteStream& bs ) const override { return bs.reader().bytes_buffered(); }
   constexpr std::string obj() const override { return "Reader"; }
 };
 
@@ -162,7 +162,7 @@ struct AvailableCapacity : public ExpectNumber<ByteStream, uint64_t>
 {
   using ExpectNumber::ExpectNumber;
   std::string name() const override { return "available_capacity"; }
-  size_t value( const ByteStream& bs ) const override { return bs.writer().available_capacity(); }
+  uint64_t value( const ByteStream& bs ) const override { return bs.writer().available_capacity(); }
   constexpr std::string obj() const override { return "Writer"; }
 };
 
@@ -170,7 +170,7 @@ struct BytesPushed : public ExpectNumber<ByteStream, uint64_t>
 {
   using ExpectNumber::ExpectNumber;
   std::string name() const override { return "bytes_pushed"; }
-  size_t value( const ByteStream& bs ) const override { return bs.writer().bytes_pushed(); }
+  uint64_t value( const ByteStream& bs ) const override { return bs.writer().bytes_pushed(); }
   constexpr std::string obj() const override { return "Writer"; }
 };
 
@@ -178,7 +178,7 @@ struct BytesPopped : public ExpectNumber<ByteStream, uint64_t>
 {
   using ExpectNumber::ExpectNumber;
   std::string name() const override { return "bytes_popped"; }
-  size_t value( const ByteStream& bs ) const override { return bs.reader().bytes_popped(); }
+  uint64_t value( const ByteStream& bs ) const override { return bs.reader().bytes_popped(); }
   constexpr std::string obj() const override { return "Reader"; }
 };
 

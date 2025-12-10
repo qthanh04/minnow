@@ -10,13 +10,13 @@ void stress_test( const size_t input_len,    // NOLINT(bugprone-easily-swappable
                   const size_t capacity,     // NOLINT(bugprone-easily-swappable-parameters)
                   const size_t random_seed ) // NOLINT(bugprone-easily-swappable-parameters)
 {
-  default_random_engine rd { random_seed };
+  default_random_engine rd { static_cast<default_random_engine::result_type>( random_seed ) };
 
   const string data = [&rd, &input_len] {
-    uniform_int_distribution<char> ud;
+    uniform_int_distribution<int> ud( 0, 255 );
     string ret;
     for ( size_t i = 0; i < input_len; ++i ) {
-      ret += ud( rd );
+      ret += static_cast<char>( ud( rd ) );
     }
     return ret;
   }();
